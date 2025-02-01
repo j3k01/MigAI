@@ -1,0 +1,39 @@
+
+# **IDE i edytory**
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln.docstates
+*.vs/
+*.code-workspace
+
+# **Build i zależności**
+bin/
+obj/
+out/
+TestResults/
+node_modules/
+
+# **Konfiguracja systemowa**
+*.db
+*.bak
+*.log
+
+# **Pliki NuGet**
+*.nupkg
+packages/
+project.lock.json
+
+# **Pliki generowane przez Rider/ReSharper**
+*.DotSettings.user
+*_Resharper.*
+
+# **Pliki systemowe Windows**
+Thumbs.db
+ehthumbs.db
+*.lnk
+
+# **Pliki użytkownika**
+MigAI.docx
+~$MigAI.docx
