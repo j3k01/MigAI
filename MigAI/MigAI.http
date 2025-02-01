@@ -1,0 +1,6 @@
+@MigAI_HostAddress = http://localhost:5140
+
+GET {{MigAI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
