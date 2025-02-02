@@ -11,10 +11,10 @@ namespace MigAI.Domain.Entities
 
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; } = new();
+        public User User { get; set; }
         [ForeignKey("Lesson")]
         public int LessonId {  get; set; }
-        public Lesson Lesson { get; set; } = new();
+        public Lesson Lesson { get; set; }
 
     }
 }

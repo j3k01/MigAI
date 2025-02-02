@@ -13,7 +13,7 @@ namespace MigAI.Domain.Entities
         public Role UserRole { get; set; } = Role.Student;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-        public List<UserProgress> Progress { get; set; }
+        public List<UserProgress> Progress { get; set; } = new();
 
     }
 }
