@@ -21,6 +21,10 @@ export class AuthService {
     this.tokenService.removeToken();
   }
 
+  register(userEmail: string, hashedPassword: string): Observable<any> {
+    return this.http.post<any>('https://localhost:7127/api/user/register', { userEmail, hashedPassword });
+  }
+  
   isAuthenticated(): boolean {
     return !!this.tokenService.getToken();
   }
