@@ -1,0 +1,26 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 login-card">
+      <h2 class="text-center mb-4">🔑 Logowanie</h2>
+      
+      <form (ngSubmit)="login()">
+        <div class="mb-3">
+          <label for="email" class="form-label">📧 Email</label>
+          <input type="email" id="email" [(ngModel)]="email" name="email" class="form-control" required />
+        </div>
+  
+        <div class="mb-3">
+          <label for="password" class="form-label">🔒 Hasło</label>
+          <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required />
+        </div>
+  
+        <button type="submit" class="btn btn-primary w-100">Zaloguj</button>
+  
+        <p *ngIf="errorMessage" class="text-danger mt-3 text-center">{{ errorMessage }}</p>
+      </form>
+  
+      <div class="text-center mt-3">
+        <a href="#" class="text-muted">Nie masz konta? Zarejestruj się</a>
+      </div>
+    </div>
+  </div>
+  

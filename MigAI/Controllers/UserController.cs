@@ -6,6 +6,8 @@ using System.Security.Claims;
 
 namespace MigAI.API.Controllers
 {
+    [Route("api/user")]
+    [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;

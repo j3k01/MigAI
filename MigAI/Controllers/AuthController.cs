@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MigAI.API.Controllers
 {
-    public class AuthController : Controller
+    [Route("api/auth")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
 
