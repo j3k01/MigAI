@@ -1,0 +1,23 @@
+.camera-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .result-message {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  .success {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .error {
+    color: red;
+    font-weight: bold;
+  }
+  

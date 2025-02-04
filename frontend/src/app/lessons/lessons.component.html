@@ -1,0 +1,14 @@
+<div class="container mt-4">
+    <h2 class="text-center mb-4">📖 Lekcje w rozdziale {{ chapterId }}</h2>
+    <p class="text-center">Tutaj będą wyświetlone lekcje dla tego rozdziału.</p>
+  </div>
+  <div class="lesson-container">
+    <h2>{{ lessonTitle }}</h2>
+    <p>Spróbuj wykonać znak: <strong>{{ expectedSign }}</strong></p>
+    
+    <!-- Komponent do rozpoznawania znaków -->
+    <app-sign-detection [expectedSign]="expectedSign" (signDetected)="checkSign($event)"></app-sign-detection>
+  
+    <p *ngIf="message" class="result-message">{{ message }}</p>
+  </div>
+  

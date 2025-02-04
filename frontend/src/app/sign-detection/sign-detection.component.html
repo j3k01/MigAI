@@ -1,0 +1,10 @@
+<div class="camera-container">
+    <video #videoElement autoplay></video>
+  </div>
+  
+  <div class="result-message">
+    <p *ngIf="predictedSign">Rozpoznany znak: <strong>{{ predictedSign }}</strong></p>
+    <p *ngIf="isCorrectSign" class="success">✅ Dobrze! Wykonałeś znak poprawnie.</p>
+    <p *ngIf="isCorrectSign === false" class="error">❌ Spróbuj ponownie!</p>
+  </div>
+  
