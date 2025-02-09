@@ -1,14 +1,41 @@
 <div class="container mt-4">
-    <h2 class="text-center mb-4">📖 Lekcje w rozdziale {{ chapterId }}</h2>
-    <p class="text-center">Tutaj będą wyświetlone lekcje dla tego rozdziału.</p>
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">{{ lessonTitle }}</h2>
+    <p class="text-muted">{{ lessonDescription }}</p>
   </div>
-  <div class="lesson-container">
-    <h2>{{ lessonTitle }}</h2>
-    <p>Spróbuj wykonać znak: <strong>{{ expectedSign }}</strong></p>
-    
-    <!-- Komponent do rozpoznawania znaków -->
-    <app-sign-detection [expectedSign]="expectedSign" (signDetected)="checkSign($event)"></app-sign-detection>
-  
-    <p *ngIf="message" class="result-message">{{ message }}</p>
+
+  <div class="text-center mb-4">
+    <h4 class="fw-bold">👀 Obejrzyj instruktaż</h4>
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe *ngIf="lessonVideoUrl" class="embed-responsive-item"
+              [src]="lessonVideoUrl" width="560" height="315"
+              frameborder="0" allowfullscreen>
+      </iframe>
+    </div>
   </div>
-  
+
+  <div class="text-center">
+    <button class="btn btn-primary btn-lg" (click)="startSignDetection()">🎬 Rozpocznij ćwiczenie</button>
+  </div>
+
+  <div *ngIf="showSignDetection" class="row mt-4 justify-content-center">
+    <div class="col-md-8 text-center">
+      <h4 class="fw-bold">📷 Podgląd kamery</h4>
+      <app-sign-detection 
+        [expectedSigns]="lessonSigns" 
+        [modelName]="modelName" 
+        (signDetected)="checkSign($event)">
+      </app-sign-detection>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <div class="alert" [ngClass]="{'alert-success': message.includes('✅'), 'alert-danger': message.includes('❌')}">
+      {{ message }}
+    </div>
+  </div>
+
+  <div class="text-center mt-3">
+    <button class="btn btn-success" (click)="nextLesson()">⏭ Przejdź do następnej lekcji</button>
+  </div>
+</div>

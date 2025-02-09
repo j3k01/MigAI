@@ -36,6 +36,6 @@ export class CameraService {
   }
 
   sendToAI(keypoints: number[]) {
-    return this.http.post<{ predictedSign: number }>('https://localhost:7127/api/ai/predict', keypoints);
+    return this.http.post<{ predictedSign: number }>('http://localhost:8000/predict/', keypoints);
   }
 }

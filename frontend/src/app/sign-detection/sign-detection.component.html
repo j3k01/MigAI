@@ -1,10 +1,7 @@
-<div class="camera-container">
-    <video #videoElement autoplay></video>
-  </div>
-  
-  <div class="result-message">
-    <p *ngIf="predictedSign">Rozpoznany znak: <strong>{{ predictedSign }}</strong></p>
-    <p *ngIf="isCorrectSign" class="success">✅ Dobrze! Wykonałeś znak poprawnie.</p>
-    <p *ngIf="isCorrectSign === false" class="error">❌ Spróbuj ponownie!</p>
-  </div>
-  
+<div class="sign-detection-container">
+  <h2>Rozpoznawanie znaków migowych</h2>
+  <video #videoElement autoplay></video>
+  <h2>Wizualizacja ruchu rąk 🖐</h2>
+  <canvas #canvasElement></canvas>
+  <p><strong>Rozpoznany znak:</strong> {{ predictedSign }}</p>
+</div>
