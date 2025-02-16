@@ -5,11 +5,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChaptersComponent } from './chapters/chapters.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { authGuard } from './auth/guards/auth.guard';
+import { RenderMode } from '@angular/ssr';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'chapters', component: ChaptersComponent },
-    { path: 'lessons/:id', component: LessonsComponent },
+    { path: 'lessons/:id', component: LessonsComponent, data: { RenderMode: 'server'} },
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
     { path: '**', redirectTo: 'login' }

@@ -8,9 +8,9 @@ namespace MigAI.Infrastructure.Repositories
     public class SectionRepository : ISectionRepository
     {
         private readonly AppDbContext _context;
-        private readonly Logger<SectionRepository> _logger;
+        private readonly ILogger<SectionRepository> _logger;
 
-        public SectionRepository(AppDbContext context, Logger<SectionRepository> logger) 
+        public SectionRepository(AppDbContext context, ILogger<SectionRepository> logger) 
         {
             _context = context;
             _logger = logger;

@@ -1,69 +1,99 @@
-<div class="container mt-4">
-    <div class="row">
-      <!-- Lewa nawigacja -->
-      <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-        <div class="position-sticky">
-          <h4 class="p-3">Menu</h4>
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#"> 🏠 Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> 📚 Lekcje</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#"> 📊 Statystyki</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-danger" (click)="logout()"> 🚪 Wyloguj</a>
-            </li>
-          </ul>
+<div class="container-fluid mt-4">
+  <div class="row">
+    <!-- Lewa nawigacja -->
+    <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar shadow-sm">
+      <div class="position-sticky p-3">
+        <h4 class="fw-bold text-center">📌 Menu</h4>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active fw-bold" href="#">🏠 Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">📚 Lekcje</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">📊 Statystyki</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-bold" (click)="logout()">🚪 Wyloguj</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Główna zawartość -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2 class="fw-bold">{{ title }}</h2>
+      </div>
+
+      <!-- Powitanie -->
+      <div class="alert alert-info text-center shadow-sm" role="alert">
+        🎉 Witaj w panelu użytkownika! Tutaj możesz zarządzać swoimi lekcjami i sprawdzać postępy.
+      </div>
+
+      <!-- Progress Bar użytkownika -->
+      <div class="progress mt-3">
+        <div 
+          class="progress-bar progress-bar-striped bg-success" 
+          role="progressbar" 
+          [style.width.%]="userProgress"
+          [attr.aria-valuenow]="userProgress" 
+          aria-valuemin="0" 
+          aria-valuemax="100">
+          {{ userProgress }}%
         </div>
-      </nav>
-  
-      <!-- Główna zawartość -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h2 class="h2">{{ title }}</h2>
-        </div>
-  
-        <div class="alert alert-info" role="alert">
-          🎉 Witaj w panelu użytkownika! Tutaj możesz zarządzać swoimi lekcjami i sprawdzać postępy.
-        </div>
-  
-        <!-- Sekcja szybkiego dostępu -->
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">📚 Nowe Lekcje</h5>
-                <p class="card-text">Przeglądaj nowe materiały do nauki.</p>
-                <a class="btn btn-warning" (click)="lessons()">Otwórz</a>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">📊 Twoje Postępy</h5>
-                <p class="card-text">Zobacz swoje wyniki i osiągnięcia.</p>
-                <a href="#" class="btn btn-success">Sprawdź</a>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <h5 class="card-title">🔔 Powiadomienia</h5>
-                <p class="card-text">Zobacz, co nowego w aplikacji.</p>
-                <a href="#" class="btn btn-warning">Otwórz</a>
-              </div>
+      </div>
+
+      <!-- Sekcja szybkiego dostępu -->
+      <div class="row mt-4">
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">📚 Nowe Lekcje</h5>
+              <p class="card-text">Przeglądaj nowe materiały do nauki.</p>
+              <button class="btn btn-warning fw-bold" (click)="lessons()">Otwórz</button>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">📊 Twoje Postępy</h5>
+              <p class="card-text">Zobacz swoje wyniki i osiągnięcia.</p>
+              <button class="btn btn-success fw-bold">Sprawdź</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold">🔔 Powiadomienia</h5>
+              <p class="card-text">Zobacz, co nowego w aplikacji.</p>
+              <button class="btn btn-warning fw-bold">Otwórz</button>
+            </div>
+          </div>
+        </div>
+        <!-- Sekcja odznak -->
+        <div class="row mt-4">
+          <div class="col-12">
+            <h4 class="fw-bold">🏆 Twoje odznaki</h4>
+            <div class="d-flex flex-wrap">
+              <div *ngFor="let badge of badges" class="badge bg-light text-dark m-1 p-2 shadow-sm border d-flex align-items-center">
+                <img [src]="badge.icon" alt="{{ badge.name }}" class="badge-icon me-2">
+                <div>
+                  <span class="fw-bold">{{ badge.name }}</span>
+                  <p class="small m-0">{{ badge.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
+      </div>
+    </main>
   </div>
-  
+</div>

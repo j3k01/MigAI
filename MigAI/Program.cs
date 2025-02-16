@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ISectionRepository, SectionRepository>();
+builder.Services.AddScoped<IUserProgressRepository, UserProgressRepository>();
 builder.Services.AddLogging();
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);

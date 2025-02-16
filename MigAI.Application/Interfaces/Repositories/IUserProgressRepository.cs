@@ -4,10 +4,12 @@ namespace MigAI.Application.Interfaces.Repositories
 {
     public interface IUserProgressRepository
     {
-        Task<UserProgress?> GetUserProgressAsync(string userId, int lessonId);
-        Task<List<UserProgress>> GetAllProgressForUserAsync(string userId);
+        Task<UserProgress?> GetUserProgressForLessonAsync(int userId, int lessonId);
+        Task<List<UserProgress>> GetAllProgressForUserAsync(int userId);
         Task AddProgressAsync(UserProgress userProgress);
         Task UpdateProgressAsync(UserProgress userProgress);
-        Task DeleteProgressAsync(string userId, int lessonId);
+        Task DeleteProgressAsync(int userId, int lessonId);
+        Task<List<Badge>> GetUserBadgesAsync(int userId);
+
     }
 }

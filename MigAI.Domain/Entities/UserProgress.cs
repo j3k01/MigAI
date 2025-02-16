@@ -15,6 +15,9 @@ namespace MigAI.Domain.Entities
         [ForeignKey("Lesson")]
         public int LessonId {  get; set; }
         public Lesson Lesson { get; set; }
+        [ForeignKey("Badge")]
+        public int? BadgeId {  get; set; }
+        public Badge Badge { get; set; }
 
     }
 }
