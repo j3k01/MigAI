@@ -16,7 +16,8 @@ export class SignDetectionComponent implements AfterViewInit {
   @Input() expectedSigns: string[] = [];
   @Input() modelName: string = '';
   @Output() signDetected = new EventEmitter<string>(); 
-
+  private stream: MediaStream | null = null;
+  private detectionInterval: any;
   predictedSign: string = '';
 
   detectSign(sign: string) {
@@ -31,6 +32,7 @@ export class SignDetectionComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d');
 
     navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+      this.stream = stream;
       video.srcObject = stream;
       video.play();
     });
@@ -65,7 +67,7 @@ export class SignDetectionComponent implements AfterViewInit {
       }
     });
 
-    setInterval(async () => {
+    this.detectionInterval = setInterval(async () => {
       await holistic.send({ image: video });
     }, 1000);
   }
@@ -109,7 +111,15 @@ export class SignDetectionComponent implements AfterViewInit {
       });
     }
   }
-  
+  ngOnDestroy() {
+    if (this.stream)
+    {
+      this.stream.getTracks().forEach(track => track.stop());
+    }
 
-
+    if(this.detectionInterval)
+    {
+      clearInterval(this.detectionInterval);
+    }
+  }
 }

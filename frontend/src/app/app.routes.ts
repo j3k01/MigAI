@@ -6,6 +6,7 @@ import { ChaptersComponent } from './chapters/chapters.component';
 import { LessonsComponent } from './lessons/lessons.component';
 import { authGuard } from './auth/guards/auth.guard';
 import { RenderMode } from '@angular/ssr';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -13,5 +14,6 @@ export const routes: Routes = [
     { path: 'lessons/:id', component: LessonsComponent, data: { RenderMode: 'server'} },
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+    { path: 'notifications', component: NotificationsComponent },
     { path: '**', redirectTo: 'login' }
   ];

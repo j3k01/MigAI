@@ -21,4 +21,10 @@ export class ChaptersComponent {
   goToLessons(chapterId: number) {
     this.router.navigate(['/lessons', chapterId]);
   }
+
+  backToMenu() {
+    this.router.navigate(['/dashboard']);
+
+  }
+
 }

@@ -58,8 +58,11 @@ export class DashboardComponent {
   }
 
   lessons() {
-    this.tokenService.removeToken();
+    //this.tokenService.removeToken();
     this.router.navigate(['/chapters']);
   }
 
+  notifications() {
+    this.router.navigate(['/notifications']);
+  }
 }

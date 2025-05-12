@@ -55,6 +55,10 @@ export class LessonsComponent implements OnInit {
     this.showSignDetection = true;
   }
 
+  stopSignDetection() {
+    this.showSignDetection = false;
+  }
+
   checkSign(detectedSign: string) {
     if (this.lessonSigns.includes(detectedSign)) {  
       this.message = `✅ Dobrze! Rozpoznano znak: ${detectedSign}.`;
@@ -66,6 +70,13 @@ export class LessonsComponent implements OnInit {
   nextLesson() {
     if (this.chapterId !== null) {
       this.router.navigate(['/lessons', this.chapterId + 1]);
+    }
+  }
+
+  backToMenu() {
+    if (this.chapterId !== null) {
+      this.stopSignDetection();
+      this.router.navigate(['/chapters']);
     }
   }
 
