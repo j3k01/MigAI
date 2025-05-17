@@ -12,6 +12,11 @@ namespace MigAI.Infrastructure
         public DbSet<Sign> Signs { get; set; }
         public DbSet<AIModel> AIModels { get; set; }
         public DbSet<UserProgress> UserProgress { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
