@@ -2,30 +2,43 @@
     <div class="card shadow-lg p-4 register-card">
       <h2 class="text-center mb-4">📝 Rejestracja</h2>
   
-      <form (ngSubmit)="register()">
+      <form #form="ngForm" (ngSubmit)="register()">
 
         <div class="mb-3">
           <label for="email" class="form-label">📧 Email</label>
-          <input type="email" id="email" [(ngModel)]="userEmail" name="email" class="form-control" required />
+          <input type="email" id="email" [(ngModel)]="userEmail" name="email" class="form-control" required email #email="ngModel" />
+            <div *ngIf="email.invalid && email.touched" class="text-danger small">
+              <span *ngIf="email.errors?.['required']">Email jest wymagany.</span>
+              <span *ngIf="email.errors?.['email']">Niepoprawny format adresu email.</span>
+            </div>
         </div>
   
         <div class="mb-3">
           <label for="password" class="form-label">🔒 Hasło</label>
-          <input type="password" id="password" [(ngModel)]="hashedPassword" name="password" class="form-control" required />
+          <input type="password" [(ngModel)]="hashedPassword" name="password" required minlength="6" class="form-control" #password="ngModel" />
+            <div *ngIf="password.invalid && password.touched" class="text-danger small">
+              <span *ngIf="password.errors?.['required']">Hasło jest wymagane.</span>
+              <span *ngIf="password.errors?.['minlength']">Hasło musi mieć co najmniej 6 znaków.</span>
+            </div>
         </div>
   
         <div class="mb-3">
           <label for="confirmPassword" class="form-label">🔄 Powtórz hasło</label>
-          <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required />
+          <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" class="form-control" required #confirmPasswordField="ngModel" />
+            <div *ngIf="confirmPassword !== hashedPassword && confirmPasswordField.touched" class="text-danger small">
+              Hasła nie są takie same.
+            </div>
         </div>
   
-        <button type="submit" class="btn btn-success w-100">Zarejestruj się</button>
-  
+        <button type="submit" class="btn btn-success w-100" [disabled]="form.invalid">
+          Zarejestruj się
+        </button>
+          
         <p *ngIf="errorMessage" class="text-danger mt-3 text-center">{{ errorMessage }}</p>
       </form>
   
       <div class="text-center mt-3">
-        <button class="btn btn-link" (click)="goToLogin()">Nie masz konta? Zarejestruj się</button>
+        <button class="btn btn-link" (click)="goToLogin()">Masz już konto? Zaloguj się!</button>
     </div>
     </div>
   </div>
