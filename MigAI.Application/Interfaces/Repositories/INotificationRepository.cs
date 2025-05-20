@@ -6,7 +6,7 @@ namespace MigAI.Application.Interfaces.Repositories
     {
         //Notifications section
         Task<Notification?> GetNotificationByIdAsync(int id);
-        Task<Notification?> GetNotificationByTitle(string title);
+        Task<Notification?> GetNotificationByTitleAsync(string title);
         Task<List<Notification>> GetAllAsync();
         Task<IEnumerable<Notification>> GetLatestNotificationWithDetailsAsync(int count = 10);
         Task<Notification> CreateNotificationAsync(Notification notification);

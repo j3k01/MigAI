@@ -1,27 +1,30 @@
 <div class="notifications">
-    <button class="btn btn-outline-secondary mb-3 back-btn" (click)="backToMenu()">🔙 Powrót do menu</button>
-    <h3 class="fw-bold mb-3">🔔 Aktualizacje i nowości</h3>
-    <div class="notification-post" *ngFor="let post of notifications">
-        <div class="post-header d-flex justify-content-between align-items-center mb-2">
+  <button class="btn btn-outline-secondary mb-3 back-btn" (click)="backToMenu()">🔙 Powrót do menu</button>
+  <h3 class="fw-bold mb-3 text-center">🔔 Aktualizacje i nowości</h3>
+
+  <div *ngIf="loading" class="text-center my-5">
+    Ładowanie powiadomień…
+  </div>
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+    
+  <div class="notification-post" *ngFor="let post of notifications">
         <h5 class="fw-bold mb-0">{{ post.title }}</h5>
-        <span class="date text-muted">{{ post.date | date:'longDate' }}</span>
-        </div>
-    
-        <p class="post-content">{{ post.content }}</p>
-    
+        <span class="date text-muted">{{ post.date }}</span>
         <!-- Reakcje -->
         <div class="post-reactions d-flex gap-2 mt-2">
-        <button class="reaction-btn" (click)="react(post, 'like')">👍 {{ post.reactions.like }}</button>
-        <button class="reaction-btn" (click)="react(post, 'G')">👌 {{ post.reactions.G }}</button>
-        <button class="reaction-btn" (click)="react(post, 'POG')">💪 {{ post.reactions.POG }}</button>
-        <button class="reaction-btn" (click)="react(post, 'kupsko')">💩 {{ post.reactions.kupsko }}</button>
+        <button class="reaction-btn" (click)="react(post, 'like')">👍 {{ post.reactions['like'] }}</button>
+        <button class="reaction-btn" (click)="react(post, 'G')">👌 {{ post.reactions['G'] }}</button>
+        <button class="reaction-btn" (click)="react(post, 'POG')">💪 {{ post.reactions['POG'] }}</button>
+        <button class="reaction-btn" (click)="react(post, 'kupsko')">💩 {{ post.reactions['kupsko'] }}</button>
         </div>
     
         <!-- Komentarze -->
-        <div class="post-comments mt-4">
+        <div class="post-comments mt-4">  
         <input 
             class="form-control form-control-sm mb-2" 
-            [(ngModel)]="post.newComment" 
+            [(ngModel)]="post.newComment"
             placeholder="Dodaj komentarz..." />
     
         <button class="btn btn-sm btn-outline-primary mb-3" (click)="addComment(post)">💬 Dodaj komentarz</button>

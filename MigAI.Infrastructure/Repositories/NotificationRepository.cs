@@ -22,7 +22,7 @@ namespace MigAI.Infrastructure.Repositories
             return await _context.Notifications.FindAsync(id);
         }
 
-        public async Task<Notification?> GetNotificationByTitle(string title)
+        public async Task<Notification?> GetNotificationByTitleAsync(string title)
         {
             return await _context.Notifications.FirstOrDefaultAsync(n => n.Title == title);
 
@@ -52,7 +52,19 @@ namespace MigAI.Infrastructure.Repositories
 
         public async Task UpdateNotificationAsync(Notification notification)
         {
-            _context.Notifications.Update(notification);
+            var existing = await _context.Notifications.FindAsync(notification.Id);
+            if (existing == null)
+                throw new KeyNotFoundException($"Notification {notification.Id} not found!");
+
+            existing.Title = notification.Title;
+            existing.Comments = notification.Comments;
+            existing.Date = notification.Date;
+            existing.Reactions = notification.Reactions;
+            existing.LikeCount = notification.LikeCount;
+            existing.GCount = notification.GCount;
+            existing.POGCount = notification.POGCount;
+            existing.StinkyCount = notification.StinkyCount;
+
             await _context.SaveChangesAsync();
         }
 
