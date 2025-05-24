@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MigAI.Application.DTO;
 using MigAI.Application.Interfaces.Repositories;
 using MigAI.Domain.Entities;
 
@@ -79,11 +80,19 @@ namespace MigAI.Infrastructure.Repositories
         }
 
         //Comments section
-        public async Task<IEnumerable<Comment>> GetCommentsAsync(int notificationId)
+        public async Task<IEnumerable<CommentDto>> GetCommentsAsync(int notificationId)
         {
             return await _context.Comments
                 .Where(c => c.NotificationId == notificationId)
                 .AsNoTracking()
+                .Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    Content = c.Content,
+                    UserEmail = c.User.UserEmail,
+                    CreatedAt = c.CreatedAt,
+                    DisplayName = c.User.DisplayName
+                })
                 .ToListAsync();
         }
         public async Task AddCommentAsync(int notificationId, Comment comment)

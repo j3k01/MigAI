@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MigAI.Application.DTO;
 using MigAI.Application.Interfaces.Repositories;
 using MigAI.Domain.Entities;
 using MigAI.Infrastructure.Repositories;
@@ -19,13 +20,13 @@ namespace MigAI.API.Controllers
         [HttpGet("{notificationId}")]
         public async Task<IActionResult> GetNotificationByIdAsync(int notificationId)
         {
-            if(notificationId <= 0)
+            if (notificationId <= 0)
             {
                 return BadRequest(new { message = "Invalid notification ID!" });
             }
 
             var notification = await _notificationRepository.GetNotificationByIdAsync(notificationId);
-            if(notification == null)
+            if (notification == null)
             {
                 return NotFound(new { message = "Notification not found!" });
             }
@@ -35,12 +36,12 @@ namespace MigAI.API.Controllers
         [HttpGet("ByTitle/{title}")]
         public async Task<IActionResult> GetNotificationByTitleAsync(string title)
         {
-            if(string.IsNullOrWhiteSpace(title))
+            if (string.IsNullOrWhiteSpace(title))
             {
                 return BadRequest(new { message = "Title is required!" });
             }
             var notification = await _notificationRepository.GetNotificationByTitleAsync(title);
-            if(notification == null)
+            if (notification == null)
             {
                 return NotFound(new { message = "Notification not found!" });
             }
@@ -49,9 +50,9 @@ namespace MigAI.API.Controllers
 
         [HttpGet("latest")]
         public async Task<IActionResult> GetLatestNotificationWithDetailsAsync(int count = 10)
-        { 
+        {
             var notifications = await _notificationRepository.GetLatestNotificationWithDetailsAsync(count);
-            if(notifications == null || !notifications.Any())
+            if (notifications == null || !notifications.Any())
             {
                 return NotFound(new { message = "No notifications found!" });
             }
@@ -62,7 +63,7 @@ namespace MigAI.API.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var notifications = await _notificationRepository.GetAllAsync();
-            if(notifications == null || !notifications.Any())
+            if (notifications == null || !notifications.Any())
             {
                 return NotFound(new { message = "No notifications found!" });
             }
@@ -85,9 +86,9 @@ namespace MigAI.API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateNotificationAsync([FromBody] Notification notification)
         {
-            if(notification == null)
+            if (notification == null)
             {
-               return BadRequest(new { message = "Notifications not found, bad request!" });
+                return BadRequest(new { message = "Notifications not found, bad request!" });
             }
             var existing = await _notificationRepository.GetNotificationByIdAsync(notification.Id);
             if (existing == null)
@@ -108,5 +109,107 @@ namespace MigAI.API.Controllers
         }
 
         //Comments section
+
+        [HttpGet("{notificationId}/comments")]
+        public async Task<IActionResult> GetCommentsAsync(int notificationId)
+        {
+            if (notificationId <= 0)
+            {
+                return BadRequest(new { message = "Invalid notification ID!" });
+            }
+            var comments = await _notificationRepository.GetCommentsAsync(notificationId);
+            if (comments == null || !comments.Any())
+            {
+                return NotFound(new { message = "No comments found for this notification!" });
+            }
+            return Ok(comments);
+        }
+
+        [HttpPost("{notificationId}/comment")]
+        public async Task<IActionResult> AddCommentAsync(int notificationId, [FromBody] AddCommentDto dto)
+        {
+            if(notificationId <= 0 || dto == null)
+            {
+                return BadRequest(new { message = "Invalid notification ID or comment!" });
+            }
+
+            var comment = new Comment
+            {
+                Content = dto.Content,
+                UserId = dto.UserId,
+                NotificationId = notificationId,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await _notificationRepository.AddCommentAsync(notificationId, comment);
+
+            return Ok(comment);
+        }
+
+        [HttpPut("{notificationId}/comment")]
+        public async Task<IActionResult> UpdateCommentAsync(int notificationId, [FromBody] Comment comment)
+        {
+            if(notificationId <= 0 || comment == null)
+            {
+                return BadRequest(new { message = "Invalid notification ID or comment!" });
+            }
+            var existingComments = await _notificationRepository.GetCommentsAsync(notificationId);
+            if (existingComments == null || !existingComments.Any(c => c.Id == comment.Id))
+            {
+                return NotFound(new { message = "Comment not found!" });
+            }
+            await _notificationRepository.UpdateCommentAsync(notificationId, comment);
+            return NoContent();
+        }
+
+        [HttpDelete("comment/{notificationId:int}/{commentId:int}")]
+        public async Task<IActionResult> DeleteCommentAsync(int notificationId, int commentId)
+        {
+            if (notificationId <= 0 || commentId <= 0)
+            {
+                return BadRequest(new { message = "Invalid notification ID or comment ID!" });
+            }
+            await _notificationRepository.DeleteCommentAsync(notificationId, commentId);
+            return NoContent();
+        }
+
+        //Reactions section
+        [HttpGet("{notificationId}/reactions")]
+        public async Task<IActionResult> GetReactionCountsAsync(int notificationId)
+        {
+            if(notificationId <= 0)
+            {
+                return BadRequest(new { message = "Invalid notificationId!"});
+            }
+
+            var reactionCount = await _notificationRepository.GetReactionCountsAsync(notificationId);
+            if (reactionCount == null || !reactionCount.Any())
+            {
+                return NotFound(new { message = "No reactions found for this notification!" });
+            }
+            return Ok(reactionCount);
+        }
+
+        [HttpPost("{notificationId}/reaction")]
+        public async Task<IActionResult> AddReactionAsync(int notificationId, [FromBody] Reaction reaction)
+        {
+            if (notificationId <= 0 || reaction == null)
+            {
+                return BadRequest(new { message = "Invalid notification ID or reaction!" });
+            }
+            await _notificationRepository.AddReactionAsync(notificationId, reaction);
+            return NoContent();
+        }
+
+        [HttpDelete("{notificationId}/reactions")]
+        public async Task<IActionResult> DeleteReactionAsync(int notificationId, int reactionId)
+        {
+            if (notificationId <= 0 || reactionId <= 0)
+            {
+                return BadRequest(new { message = "Invalid notification ID or reaction ID!" });
+            }
+            await _notificationRepository.DeleteReactionAsync(notificationId, reactionId);
+            return NoContent();
+        }
     }
 }

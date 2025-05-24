@@ -1,4 +1,5 @@
-﻿using MigAI.Domain.Entities;
+﻿using MigAI.Application.DTO;
+using MigAI.Domain.Entities;
 
 namespace MigAI.Application.Interfaces.Repositories
 {
@@ -15,7 +16,7 @@ namespace MigAI.Application.Interfaces.Repositories
 
         //Comments section
         Task AddCommentAsync(int notificationId, Comment comment);
-        Task<IEnumerable<Comment>> GetCommentsAsync(int notificationId);
+        Task<IEnumerable<CommentDto>> GetCommentsAsync(int notificationId);
         Task UpdateCommentAsync(int notificationId, Comment comment);
         Task DeleteCommentAsync(int notificationId, int commentId);
 

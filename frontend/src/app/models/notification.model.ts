@@ -1,3 +1,5 @@
+import { AppComment } from './comment.model';
+
 export interface Notification 
 {
     id: number;
@@ -5,6 +7,6 @@ export interface Notification
     content: string;
     date: string;
     reactions: { [key: string]: number };
-    comments: string[];
+    comments: AppComment[];
     newComment?: string;
 }
