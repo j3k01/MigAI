@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MigAI.API.Models;
 using MigAI.Application.DTO;
 using MigAI.Application.Interfaces.Repositories;
 using MigAI.Domain.Entities;
-using MigAI.Infrastructure.Repositories;
 
 namespace MigAI.API.Controllers
 {
@@ -191,17 +191,25 @@ namespace MigAI.API.Controllers
         }
 
         [HttpPost("{notificationId}/reaction")]
-        public async Task<IActionResult> AddReactionAsync(int notificationId, [FromBody] Reaction reaction)
+        public async Task<IActionResult> AddReactionAsync(int notificationId, [FromBody] AddReactionDto dto)
         {
-            if (notificationId <= 0 || reaction == null)
+            if (notificationId <= 0 || dto == null)
             {
                 return BadRequest(new { message = "Invalid notification ID or reaction!" });
             }
+
+            var reaction = new Reaction
+            {
+                NotificationId = notificationId,
+                UserId = dto.UserId,
+                Type = dto.Type
+            };
+
             await _notificationRepository.AddReactionAsync(notificationId, reaction);
             return NoContent();
         }
 
-        [HttpDelete("{notificationId}/reactions")]
+        [HttpDelete("/reaction/{notificationId:int}/{reactionId:int}")]
         public async Task<IActionResult> DeleteReactionAsync(int notificationId, int reactionId)
         {
             if (notificationId <= 0 || reactionId <= 0)

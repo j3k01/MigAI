@@ -1,4 +1,5 @@
 import { AppComment } from './comment.model';
+import { Reaction } from './reaction.model'
 
 export interface Notification 
 {
@@ -6,7 +7,7 @@ export interface Notification
     title: string;
     content: string;
     date: string;
-    reactions: { [key: string]: number };
+    reactions: Reaction[];
     comments: AppComment[];
     newComment?: string;
 }

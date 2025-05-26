@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NotificationsService } from '../services/NotificationsService';
 import { Notification } from '../models/notification.model';
 import { AppComment } from '../models/comment.model';
+import { ReactionType, Reaction } from '../models/reaction.model';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,7 +19,8 @@ export class NotificationsComponent implements OnInit {
   notifications: Notification[] = [];
   loading = false;
   error: string | null = null;
-
+  ReactionType = ReactionType;
+  
   constructor(
     private router: Router,
     private notificationService: NotificationsService
@@ -38,6 +40,7 @@ export class NotificationsComponent implements OnInit {
           ...n,
           newComment: '',
           comments: [],
+          reactions: [] as Reaction[],
           date: new Date(n.date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })
         }));
 
@@ -48,7 +51,15 @@ export class NotificationsComponent implements OnInit {
               post.comments = [];
             }
           });
-        });
+        }),
+          this.notifications.forEach(post => {
+            this.notificationService.getReactons(post.id).subscribe({
+              next: (reactions) => post.reactions = reactions,
+              error: () => {
+                post.reactions = [];
+              }
+            });
+          });
 
         this.loading = false;
       },
@@ -58,18 +69,6 @@ export class NotificationsComponent implements OnInit {
         this.loading = false;
       }
     });
-  }
-
-  react(post: any, type: 'like' | 'G' | 'POG' | 'kupsko') {
-    if (post.userReaction) {
-      post.reactions[post.userReaction]--;
-      if (post.userReaction === type) {
-        post.userReaction = null;
-        return;
-      }
-    }
-    post.reactions[type]++;
-    post.userReaction = type;
   }
 
   addComment(post: Notification) {
@@ -113,6 +112,43 @@ export class NotificationsComponent implements OnInit {
         });
       }
     });
+  }
+
+  countReaction(post: Notification, type: ReactionType): number {
+    const arr = Array.isArray(post.reactions) ? post.reactions : [];
+    return arr.filter(r => r.type === type).length;
+  }
+
+
+  react(post: Notification, type: number) {
+    const userId = 1;
+
+    const existing = post.reactions.find(r => r.userId === userId);
+
+    if (existing) {
+      if (existing.type === type) {
+        this.notificationService.deleteReaction(post.id, existing.id).subscribe({
+          next: () => {
+            post.reactions = post.reactions.filter(r => r.id !== existing.id);
+          },
+          error: () => alert('Nie udało się usunąć reakcji!')
+        });
+      } else {
+        this.notificationService.addOrUpdateReaction(post.id, type, userId).subscribe({
+          next: (reaction) => {
+            existing.type = reaction.type;
+          },
+          error: () => alert('Nie udało się zmienić reakcji!')
+        });
+      }
+    } else {
+      this.notificationService.addOrUpdateReaction(post.id, type, userId).subscribe({
+        next: (reaction) => {
+          post.reactions.push(reaction);
+        },
+        error: () => alert('Nie udało się dodać reakcji!')
+      });
+    }
   }
 
   backToMenu() {

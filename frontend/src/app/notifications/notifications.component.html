@@ -12,11 +12,20 @@
   <div class="notification-post" *ngFor="let post of notifications">
     <h5 class="fw-bold mb-0">{{ post.title }}</h5>
     <span class="date text-muted">{{ post.date }}</span>
-    <div class="post-reactions d-flex gap-2 mt-2">
-      <button class="reaction-btn" (click)="react(post, 'like')">👍 {{ post.reactions['like'] }}</button>
-      <button class="reaction-btn" (click)="react(post, 'G')">👌 {{ post.reactions['G'] }}</button>
-      <button class="reaction-btn" (click)="react(post, 'POG')">💪 {{ post.reactions['POG'] }}</button>
-      <button class="reaction-btn" (click)="react(post, 'kupsko')">💩 {{ post.reactions['kupsko'] }}</button>
+
+    <div class="post-reactions d-flex gap-2 mb-3">
+      <button class="reaction-btn" (click)="react(post, ReactionType.Like)">
+        👍 {{ countReaction(post, ReactionType.Like) }}
+      </button>
+      <button class="reaction-btn" (click)="react(post, ReactionType.G)">
+        👌 {{ countReaction(post, ReactionType.G) }}
+      </button>
+      <button class="reaction-btn" (click)="react(post, ReactionType.POG)">
+        💪 {{ countReaction(post, ReactionType.POG) }}
+      </button>
+      <button class="reaction-btn" (click)="react(post, ReactionType.Stinky)">
+        💩 {{ countReaction(post, ReactionType.Stinky) }}
+      </button>
     </div>
 
     <div class="post-comments mt-4">
