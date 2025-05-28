@@ -22,7 +22,7 @@ namespace MigAI.Application.Interfaces.Repositories
 
         //Reactions section
         Task AddReactionAsync(int notificationId, Reaction reaction);
-        //Task<IEnumerable<Reaction>> GetReactionsAsync(int notificationId); is it even useful? I need to re-think this one
+        Task<IEnumerable<Reaction>> GetReactionsAsync(int notificationId);
         Task<Dictionary<ReactionType, int>> GetReactionCountsAsync(int notificationId);
         Task DeleteReactionAsync(int notificationId, int reactionId);
     }

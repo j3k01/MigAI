@@ -48,4 +48,10 @@ export class NotificationsService {
             `${this.apiUrl}/${notificationId}/reaction/${reactionId}`
         );
     }
+
+    getReactionsList(notificationId: number): Observable<Reaction[]> {
+        return this.http.get<Reaction[]>(
+            `${this.apiUrl}/${notificationId}/reactionsList`
+        );
+    }
 }

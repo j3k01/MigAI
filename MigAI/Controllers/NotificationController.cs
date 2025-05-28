@@ -190,6 +190,22 @@ namespace MigAI.API.Controllers
             return Ok(reactionCount);
         }
 
+        [HttpGet("{notificationId}/reactionsList")]
+        public async Task<IActionResult> GetReactionsAsync(int notificationId)
+        {
+            if(notificationId <= 0)
+            {
+                return BadRequest(new { message = "Invalid notificationId!" });
+            }
+
+            var reactions = await _notificationRepository.GetReactionsAsync(notificationId);
+            if (reactions == null || !reactions.Any())
+            {
+                return NotFound(new { message = "No reactions found for this notification!" });
+            }
+            return Ok(reactions);
+        }
+
         [HttpPost("{notificationId}/reaction")]
         public async Task<IActionResult> AddReactionAsync(int notificationId, [FromBody] AddReactionDto dto)
         {

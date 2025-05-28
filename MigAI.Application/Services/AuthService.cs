@@ -37,10 +37,11 @@ namespace MigAI.Application.Services
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.UserEmail),
-            new Claim(ClaimTypes.Role, user.UserRole.ToString())
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.UserEmail),
+                new Claim(ClaimTypes.Role, user.UserRole.ToString())
+            };
 
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],

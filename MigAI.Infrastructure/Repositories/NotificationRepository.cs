@@ -128,10 +128,13 @@ namespace MigAI.Infrastructure.Repositories
                 .ToDictionaryAsync(k => k.Key, v => v.Count);
         }
 
-        //public Task<IEnumerable<Reaction>> GetReactionsAsync(int notificationId)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<IEnumerable<Reaction>> GetReactionsAsync(int notificationId)
+        {
+            return await _context.Reactions
+                .Where(r => r.NotificationId == notificationId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
         public async Task AddReactionAsync(int notificationId, Reaction reaction)
         {

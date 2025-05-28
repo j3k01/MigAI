@@ -7,6 +7,8 @@ import { Notification } from '../models/notification.model';
 import { AppComment } from '../models/comment.model';
 import { ReactionType, Reaction } from '../models/reaction.model';
 import Swal from 'sweetalert2';
+import { switchMap } from 'rxjs';
+import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'app-notifications',
@@ -20,8 +22,9 @@ export class NotificationsComponent implements OnInit {
   loading = false;
   error: string | null = null;
   ReactionType = ReactionType;
-  
+
   constructor(
+    private auth: AuthService,
     private router: Router,
     private notificationService: NotificationsService
   ) { }
@@ -53,11 +56,9 @@ export class NotificationsComponent implements OnInit {
           });
         }),
           this.notifications.forEach(post => {
-            this.notificationService.getReactons(post.id).subscribe({
-              next: (reactions) => post.reactions = reactions,
-              error: () => {
-                post.reactions = [];
-              }
+            this.notificationService.getReactionsList(post.id).subscribe({
+              next: reactions => post.reactions = reactions,
+              error: () => post.reactions = []
             });
           });
 
@@ -74,7 +75,11 @@ export class NotificationsComponent implements OnInit {
   addComment(post: Notification) {
     const trimmed = post.newComment?.trim();
     if (!trimmed) return;
-    const userId = 1;
+    const userId = this.auth.getUserId();
+    if (userId === null) {
+      alert('Musisz być zalogowany, żeby dodać komentarz.');
+      return;
+    }
     this.notificationService.addComment(post.id, trimmed, userId)
       .subscribe({
         next: (comment) => {
@@ -115,41 +120,28 @@ export class NotificationsComponent implements OnInit {
   }
 
   countReaction(post: Notification, type: ReactionType): number {
-    const arr = Array.isArray(post.reactions) ? post.reactions : [];
-    return arr.filter(r => r.type === type).length;
+    return post.reactions.filter(r => r.type === type).length;
   }
 
-
-  react(post: Notification, type: number) {
-    const userId = 1;
-
-    const existing = post.reactions.find(r => r.userId === userId);
-
-    if (existing) {
-      if (existing.type === type) {
-        this.notificationService.deleteReaction(post.id, existing.id).subscribe({
-          next: () => {
-            post.reactions = post.reactions.filter(r => r.id !== existing.id);
-          },
-          error: () => alert('Nie udało się usunąć reakcji!')
-        });
-      } else {
-        this.notificationService.addOrUpdateReaction(post.id, type, userId).subscribe({
-          next: (reaction) => {
-            existing.type = reaction.type;
-          },
-          error: () => alert('Nie udało się zmienić reakcji!')
-        });
-      }
-    } else {
-      this.notificationService.addOrUpdateReaction(post.id, type, userId).subscribe({
-        next: (reaction) => {
-          post.reactions.push(reaction);
-        },
-        error: () => alert('Nie udało się dodać reakcji!')
-      });
+  react(post: Notification, type: ReactionType) {
+    const userId = this.auth.getUserId();
+    if (userId === null) {
+      alert('Musisz być zalogowany, żeby dodać komentarz.');
+      return;
     }
+    this.notificationService.addOrUpdateReaction(post.id, type, userId)
+      .pipe(
+        switchMap(() =>
+          this.notificationService.getReactionsList(post.id)
+        )
+      )
+      .subscribe({
+        next: reactions => post.reactions = reactions,
+        error: () => alert('Nie udało się odświeżyć reakcji!')
+      });
   }
+
+
 
   backToMenu() {
     this.router.navigate(['/dashboard']);
