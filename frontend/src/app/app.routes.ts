@@ -7,6 +7,7 @@ import { LessonsComponent } from './lessons/lessons.component';
 import { authGuard } from './auth/guards/auth.guard';
 import { RenderMode } from '@angular/ssr';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { ProgressComponent } from './progress/progress.component';
 
 export const routes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -15,5 +16,6 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
     { path: 'notifications', component: NotificationsComponent },
+    { path: 'progress', component: ProgressComponent },
     { path: '**', redirectTo: 'login' }
   ];
