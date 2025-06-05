@@ -1,7 +1,57 @@
 <div class="sign-detection-container">
-  <h2>Rozpoznawanie znaków migowych</h2>
-  <video #videoElement autoplay></video>
-  <h2>Wizualizacja ruchu rąk 🖐</h2>
-  <canvas #canvasElement></canvas>
-  <p><strong>Rozpoznany znak:</strong> {{ predictedSign }}</p>
+  <div class="header">
+    <h2>🤟 Rozpoznawanie znaków migowych</h2>
+  </div>
+
+  <div class="video-section">
+    <div class="video-container">
+      <video #videoElement autoplay muted></video>
+      <canvas #canvasElement></canvas>
+
+      <div class="countdown-overlay" *ngIf="countdown > 0">
+        <div class="countdown-number">{{ countdown }}</div>
+      </div>
+
+      <div class="recording-indicator" *ngIf="isRecording && countdown === 0">
+        <div class="recording-dot"></div>
+        <span>NAGRYWANIE...</span>
+      </div>
+    </div>
+
+    <div class="progress-container" *ngIf="isRecording && countdown === 0">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="recordingProgress"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button
+      class="record-button"
+      [class.recording]="isRecording"
+      [disabled]="isRecording"
+      (click)="startRecording()">
+      <span *ngIf="!isRecording">🎥 Nagraj znak</span>
+      <span *ngIf="isRecording">⏺️ Nagrywanie...</span>
+    </button>
+  </div>
+
+  <div class="result-section">
+    <div class="prediction-result" *ngIf="predictedSign">
+      <button class="btn btn-primary" (click)="startRecording()" [disabled]="isRecording">
+        ▶ Rozpocznij rozpoznawanie
+      </button>
+      <p class="mt-2"><strong>Rozpoznany znak:</strong> {{ predictedSign }}</p>
+    </div>
+
+    <div class="instructions" *ngIf="!isRecording && !predictedSign">
+      <p>💡 <strong>Instrukcja:</strong></p>
+      <ul>
+        <li>Ustaw się przed kamerą</li>
+        <li>Naciśnij "Nagraj znak"</li>
+        <li>Wykonaj znak migowy podczas nagrywania (3 sekundy)</li>
+        <li>Poczekaj na wynik</li>
+      </ul>
+    </div>
+  </div>
 </div>

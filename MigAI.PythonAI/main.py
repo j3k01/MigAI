@@ -15,8 +15,8 @@ app.add_middleware(
 )
 
 try:
-    model = tf.keras.models.load_model("actionHaveDayHelp.h5") #change, from db depends on lecture
-    actions = ["Mieć", "Dziękuję", "Przepraszam"] #change, random for tests
+    model = tf.keras.models.load_model("dzienczesc.keras") #change, from db depends on lecture
+    actions = ["Dzień", "Dobry", "Cześć"] #change, random for tests
 except Exception as e:
     raise RuntimeError(f"Błąd podczas ładowania modelu: {e}")
 
@@ -39,7 +39,7 @@ async def predict(request: KeypointsRequest):
     try:
         keypoints = np.array(request.keypoints, dtype=np.float32)
 
-        if keypoints.shape != (1, 30, 258):
+        if keypoints.shape != (1, 30, 1662):
             raise HTTPException(status_code=400,
                                 detail=f"Nieprawidłowy format danych. Otrzymano {keypoints.shape}, oczekiwano (1, 30, 1662).")
 
@@ -50,3 +50,10 @@ async def predict(request: KeypointsRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Błąd przetwarzania: {str(e)}")
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print("🔥 Rozgrzewanie modelu...")
+    dummy_input = np.random.random((1, 30, 1662)).astype(np.float32)
+    model.predict(dummy_input)
+    print("✅ Model rozgrzany!")
