@@ -3,185 +3,268 @@
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    
+    h2 {
+      color: #2c3e50;
+      font-size: 2rem;
+      margin: 0;
+    }
+  }
+
+  .video-section {
+    margin-bottom: 30px;
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      background: #000;
+
+      video, canvas {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+      }
+
+      .countdown-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+
+        .countdown-number {
+          font-size: 5rem;
+          color: #fff;
+          font-weight: bold;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .recording-indicator {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(220, 53, 69, 0.9);
+        padding: 8px 12px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+        z-index: 5;
+
+        .recording-dot {
+          width: 8px;
+          height: 8px;
+          background: #fff;
+          border-radius: 50%;
+          animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      }
+    }
+
+    .progress-container {
+      margin-top: 15px;
+      text-align: center;
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 5px;
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #28a745, #20c997);
+          transition: width 0.3s ease;
+        }
+      }
+
+      .progress-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .controls {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .record-button {
+      background: linear-gradient(45deg, #007bff, #0056b3);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+      min-width: 200px;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+      }
+
+      &.recording {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        animation: recordingPulse 2s infinite;
+      }
+
+      &.disabled, &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      @keyframes recordingPulse {
+        0%, 100% { box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3); }
+        50% { box-shadow: 0 4px 15px rgba(220, 53, 69, 0.6); }
+      }
+    }
+
+    .stop-button {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #5a6268;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .result-section {
+    .prediction-result {
+      text-align: center;
+      margin-bottom: 30px;
+
+      .result-card {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+
+        h3 {
+          margin: 0 0 15px 0;
+          font-size: 1.3rem;
+        }
+
+        .predicted-sign {
+          font-size: 2rem;
+          font-weight: bold;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+
+    .status-info {
+      text-align: center;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid #007bff;
+
+      p {
+        margin: 5px 0;
+        color: #495057;
+      }
+    }
+
+    .instructions {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      border-left: 4px solid #17a2b8;
+
+      h3 {
+        color: #2c3e50;
+        margin-top: 0;
+        margin-bottom: 15px;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 20px;
+        
+        li {
+          margin-bottom: 8px;
+          line-height: 1.5;
+          color: #495057;
+        }
+      }
+    }
+  }
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 30px;
-}
+// Responsive design
+@media (max-width: 768px) {
+  .sign-detection-container {
+    padding: 15px;
 
-.video-section {
-  position: relative;
-  margin-bottom: 30px;
-}
+    .header h2 {
+      font-size: 1.5rem;
+    }
 
-.video-container {
-  position: relative;
-  display: inline-block;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
+    .controls {
+      .record-button {
+        min-width: auto;
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
 
-video, canvas {
-  display: block;
-  width: 640px;
-  height: 480px;
-}
-
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.countdown-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-
-.countdown-number {
-  font-size: 120px;
-  font-weight: bold;
-  color: #FF6B6B;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  animation: pulse 1s ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.recording-indicator {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  background: rgba(255,0,0,0.8);
-  color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  z-index: 5;
-}
-
-.recording-dot {
-  width: 12px;
-  height: 12px;
-  background: white;
-  border-radius: 50%;
-  margin-right: 8px;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-.progress-container {
-  margin-top: 15px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4CAF50, #8BC34A);
-  transition: width 0.1s ease;
-}
-
-.controls {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.record-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.record-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-}
-
-.record-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.record-button.recording {
-  background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-  animation: pulse-button 2s infinite;
-}
-
-@keyframes pulse-button {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.result-section {
-  text-align: center;
-}
-
-.prediction-result {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  padding: 20px;
-  border-radius: 15px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.predicted-sign {
-  font-size: 32px;
-  font-weight: bold;
-  margin-top: 10px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-.instructions {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 15px;
-  border-left: 5px solid #007bff;
-}
-
-.instructions ul {
-  text-align: left;
-  margin: 10px 0;
-  padding-left: 20px;
-}
-
-.instructions li {
-  margin: 8px 0;
-  color: #555;
+    .video-section .video-container {
+      .countdown-overlay .countdown-number {
+        font-size: 3rem;
+      }
+    }
+  }
 }

@@ -22,6 +22,7 @@
       <div class="progress-bar">
         <div class="progress-fill" [style.width.%]="recordingProgress"></div>
       </div>
+      <span class="progress-text">{{ recordingProgress.toFixed(0) }}%</span>
     </div>
   </div>
 
@@ -29,29 +30,45 @@
     <button
       class="record-button"
       [class.recording]="isRecording"
+      [class.disabled]="isRecording"
       [disabled]="isRecording"
       (click)="startRecording()">
-      <span *ngIf="!isRecording">🎥 Nagraj znak</span>
-      <span *ngIf="isRecording">⏺️ Nagrywanie...</span>
+      
+      <span *ngIf="!isRecording && countdown === 0">🎥 Nagraj znak migowy</span>
+      <span *ngIf="countdown > 0">⏳ Przygotuj się... {{ countdown }}</span>
+      <span *ngIf="isRecording && countdown === 0">⏺️ Nagrywanie w toku...</span>
+    </button>
+
+    <button
+      *ngIf="isRecording"
+      class="stop-button"
+      (click)="stopRecording()">
+      ⏹️ Zatrzymaj
     </button>
   </div>
 
   <div class="result-section">
     <div class="prediction-result" *ngIf="predictedSign">
-      <button class="btn btn-primary" (click)="startRecording()" [disabled]="isRecording">
-        ▶ Rozpocznij rozpoznawanie
-      </button>
-      <p class="mt-2"><strong>Rozpoznany znak:</strong> {{ predictedSign }}</p>
+      <div class="result-card">
+        <h3>✅ Rozpoznany znak:</h3>
+        <div class="predicted-sign">{{ predictedSign }}</div>
+      </div>
+    </div>
+
+    <div class="status-info" *ngIf="isRecording && countdown === 0">
+      <p>👋 Wykonuj znak migowy przed kamerą...</p>
+      <p>Zebrano: {{ (recordingProgress / 100 * 30).toFixed(0) }}/30 klatek</p>
     </div>
 
     <div class="instructions" *ngIf="!isRecording && !predictedSign">
-      <p>💡 <strong>Instrukcja:</strong></p>
-      <ul>
-        <li>Ustaw się przed kamerą</li>
-        <li>Naciśnij "Nagraj znak"</li>
-        <li>Wykonaj znak migowy podczas nagrywania (3 sekundy)</li>
-        <li>Poczekaj na wynik</li>
-      </ul>
+      <h3>💡 Instrukcja użycia:</h3>
+      <ol>
+        <li>Ustaw się przed kamerą w dobrym oświetleniu</li>
+        <li>Naciśnij przycisk "Nagraj znak migowy"</li>
+        <li>Po odliczeniu wykonaj znak migowy przez około 3 sekundy</li>
+        <li>Utrzymuj znak stabilnie - system zbiera 30 klatek</li>
+        <li>Poczekaj na wynik rozpoznawania</li>
+      </ol>
     </div>
   </div>
 </div>

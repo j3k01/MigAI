@@ -43,10 +43,15 @@ async def predict(request: KeypointsRequest):
             raise HTTPException(status_code=400,
                                 detail=f"Nieprawidłowy format danych. Otrzymano {keypoints.shape}, oczekiwano (1, 30, 1662).")
 
-        predictions = model.predict(keypoints)
-        predicted_index = int(np.argmax(predictions))
+        predictions = model.predict(keypoints)[0]  # shape (3,)
+        best_idx = int(np.argmax(predictions))
+        best_score = float(predictions[best_idx])
 
-        return {"predictedSign": actions[predicted_index]}
+        THRESHOLD = 0.60
+        if best_score < THRESHOLD:
+            return {"predictedSign": "Nie rozpoznano", "score": best_score}
+
+        return {"predictedSign": actions[best_idx], "score": best_score}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Błąd przetwarzania: {str(e)}")
