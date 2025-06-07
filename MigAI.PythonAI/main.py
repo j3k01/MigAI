@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 try:
-    model = tf.keras.models.load_model("dzienczesc.keras") #change, from db depends on lecture
+    model = tf.keras.models.load_model("model3.keras") #change, from db depends on lecture
     actions = ["Dzień", "Dobry", "Cześć"] #change, random for tests
 except Exception as e:
     raise RuntimeError(f"Błąd podczas ładowania modelu: {e}")
@@ -23,16 +23,6 @@ except Exception as e:
 
 class KeypointsRequest(BaseModel):
     keypoints: list[list[list[float]]]
-
-
-@app.get("/")
-def read_root():
-    file_path = "C:/Users/dell/Desktop/MigAI/data/hello/0.npy" #change
-    data = np.load(file_path)
-
-    a = ("Kształt tablicy:", data.shape)
-    return {"Kształt tablicy": "data.shape"}
-
 
 @app.post("/predict/")
 async def predict(request: KeypointsRequest):
@@ -47,7 +37,7 @@ async def predict(request: KeypointsRequest):
         best_idx = int(np.argmax(predictions))
         best_score = float(predictions[best_idx])
 
-        THRESHOLD = 0.60
+        THRESHOLD = 0.50
         if best_score < THRESHOLD:
             return {"predictedSign": "Nie rozpoznano", "score": best_score}
 

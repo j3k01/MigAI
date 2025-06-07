@@ -1,9 +1,9 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FACEMESH_CONTOURS, Holistic } from '@mediapipe/holistic';
+import { FACEMESH_CONTOURS, Holistic, VERSION as MP_VERSION } from '@mediapipe/holistic';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
 import { POSE_CONNECTIONS, HAND_CONNECTIONS } from '@mediapipe/holistic';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sign-detection',
@@ -12,21 +12,21 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   standalone: true
 })
-export class SignDetectionComponent implements AfterViewInit, OnDestroy { 
+export class SignDetectionComponent implements AfterViewInit, OnDestroy {
   @ViewChild('videoElement') videoElement!: ElementRef;
   @ViewChild('canvasElement') canvasElement!: ElementRef;
   @Input() expectedSigns: string[] = [];
   @Input() modelName: string = '';
-  @Output() signDetected = new EventEmitter<string>(); 
-  
+  @Output() signDetected = new EventEmitter<string>();
+
   private stream: MediaStream | null = null;
   private detectionInterval: any;
   private holistic!: Holistic;
-  
-  isRecording = false; 
+
+  isRecording = false;
   predictedSign: string = '';
   countdown: number = 0;
-  recordingProgress: number = 0; 
+  recordingProgress: number = 0;
   sequence: number[][] = [];
 
   detectSign(sign: string) {
@@ -46,7 +46,7 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async ngAfterViewInit() {
     await this.initializeCamera();
@@ -55,7 +55,7 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
 
   private async initializeCamera() {
     const video = this.videoElement.nativeElement;
-    
+
     try {
       this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
       video.srcObject = this.stream;
@@ -69,16 +69,18 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
     const canvas = this.canvasElement.nativeElement;
     const ctx = canvas.getContext('2d');
 
-    this.holistic = new Holistic({ 
-      locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}` 
+    this.holistic = new Holistic({
+      locateFile: (file: string) =>
+        `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@${MP_VERSION}/${file}`
     });
+
 
     this.holistic.setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
       enableSegmentation: false,
       smoothSegmentation: false,
-      refineFaceLandmarks: false, 
+      refineFaceLandmarks: false,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
@@ -86,7 +88,7 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
     this.holistic.onResults((results: any) => {
       this.processing = false;
       this.drawResults(ctx, canvas, results);
-      
+
       if (this.isRecording && this.countdown === 0) {
         const keypoints = this.extractKeypoints(results);
         if (keypoints.length > 0) {
@@ -114,15 +116,15 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   async startRecording() {
-    if (this.isRecording) { 
-      return; 
+    if (this.isRecording) {
+      return;
     }
 
     this.resetRecordingState();
     this.isRecording = true;
 
     console.log('🎬 Rozpoczynanie nowego nagrania...');
-    
+
     await this.runCountdown();
 
     this.startVideoProcessing();
@@ -138,20 +140,28 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
 
   private startVideoProcessing() {
     const video = this.videoElement.nativeElement;
-    
-    this.detectionInterval = setInterval(async () => {
-      if (this.isRecording && video.readyState === 4) {
-        this.processing = true; 
-        await this.holistic.send({ image: video });
+
+    const loop = async () => {
+      if (this.isRecording && !this.processing && video.readyState === 4) {
+        this.processing = true;
+        try {
+          await this.holistic.send({ image: video });
+        } finally {
+          this.processing = false;
+        }
       }
-    }, 100);
+      if (this.isRecording) requestAnimationFrame(loop);
+    };
+
+    requestAnimationFrame(loop);
   }
+
 
   stopRecording() {
     console.log('🛑 Zatrzymywanie nagrania...');
     this.isRecording = false;
     this.countdown = 0;
-    
+
     if (this.detectionInterval) {
       clearInterval(this.detectionInterval);
       this.detectionInterval = null;
@@ -159,48 +169,48 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   private extractKeypoints(results: any): number[] {
-    const pose = results.poseLandmarks 
-        ? results.poseLandmarks.flatMap((res: any) => [res.x, res.y, res.z, res.visibility]) 
-        : Array(33 * 4).fill(0);
-  
-    const lh = results.leftHandLandmarks 
-        ? results.leftHandLandmarks.flatMap((res: any) => [res.x, res.y, res.z]) 
-        : Array(21 * 3).fill(0);
-  
-    const rh = results.rightHandLandmarks 
-        ? results.rightHandLandmarks.flatMap((res: any) => [res.x, res.y, res.z]) 
-        : Array(21 * 3).fill(0);
+    const pose = results.poseLandmarks
+      ? results.poseLandmarks.flatMap((res: any) => [res.x, res.y, res.z, res.visibility])
+      : Array(33 * 4).fill(0);
 
-    const face = results.faceLandmarks 
-        ? results.faceLandmarks.slice(0, 468).flatMap((res: any) => [res.x, res.y, res.z]) 
-        : Array(468 * 3).fill(0);
-    
+    const lh = results.leftHandLandmarks
+      ? results.leftHandLandmarks.flatMap((res: any) => [res.x, res.y, res.z])
+      : Array(21 * 3).fill(0);
+
+    const rh = results.rightHandLandmarks
+      ? results.rightHandLandmarks.flatMap((res: any) => [res.x, res.y, res.z])
+      : Array(21 * 3).fill(0);
+
+    const face = results.faceLandmarks
+      ? results.faceLandmarks.slice(0, 468).flatMap((res: any) => [res.x, res.y, res.z])
+      : Array(468 * 3).fill(0);
+
     const result = [...pose, ...face, ...lh, ...rh];
     return result;
   }
-  
+
   private collectKeypoints(keypoints: number[]) {
     this.sequence.push(keypoints);
     console.log(`📊 Zebrano keypoints: ${this.sequence.length}/30`);
-  
+
     if (this.sequence.length > 30) {
       this.sequence.shift();
     }
-    
+
     this.recordingProgress = (this.sequence.length / 30) * 100;
-    
-    if (this.sequence.length === 30) { 
+
+    if (this.sequence.length === 30) {
       this.sendToBackend();
     }
   }
 
   private sendToBackend() {
     console.log("📡 Wysyłanie do API:", this.sequence.length, "klatek");
-    
+
     const sequenceToSend = [...this.sequence];
-    
-    this.http.post<{ predictedSign: string }>('http://localhost:8000/predict/', { 
-      keypoints: [sequenceToSend] 
+
+    this.http.post<{ predictedSign: string }>('http://localhost:8000/predict/', {
+      keypoints: [sequenceToSend]
     }).subscribe({
       next: (response) => {
         console.log("✅ Odpowiedź API:", response);
@@ -216,14 +226,9 @@ export class SignDetectionComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.stopRecording();
-    
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
-    }
-    
-    if (this.holistic) {
-      this.holistic.close();
-    }
+    this.isRecording = false;
+    if (this.holistic) this.holistic.close();
+    if (this.stream) this.stream.getTracks().forEach(t => t.stop());
   }
+
 }
